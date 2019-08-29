@@ -2,6 +2,8 @@
 
 namespace CorreosSdk\Client;
 
+use WsdlToPhp\PackageBase\Utils;
+
 abstract class SoapClient implements SoapClientInterface
 {
     /**

@@ -10,21 +10,6 @@ use CorreosSdk\Client\SoapClient;
 class CorreosConfig
 {
     /**
-     * @var string
-     */
-    private $login;
-
-    /**
-     * @var string
-     */
-    private $password;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
      * @var array
      */
     private $options;
@@ -34,17 +19,28 @@ class CorreosConfig
     private $mode;
 
     /**
+     * @var string
+     */
+    private $clientCode;
+    /**
+     * @var string
+     */
+    private $clientNumber;
+    /**
+     * @var string
+     */
+    private $clientContractNumber;
+
+    /**
      * CorreosConnector constructor.
      * @param string $login
      * @param string $password
-     * @param string $url
-     * @param array $options
+     * @param string $clientNumber
+     * @param string $clientContractNumber
+     * @param string $mode
      */
-    public function __construct(string $login,string $password, string $url, $mode = 'prod')
+    public function __construct(string $login,string $password, string $clientCode ,string $clientNumber, string $clientContractNumber, $mode = 'prod')
     {
-        $this->login = $login;
-        $this->password = $password;
-        $this->url = $url;
         $this->mode = $mode;
 
         $this->options = [
@@ -52,7 +48,7 @@ class CorreosConfig
             SoapClient::WSDL_LOGIN => $login,
             SoapClient::WSDL_PASSWORD => $password,
             SoapClient::WSDL_TRACE => true,
-            SoapClient::WSDL_URL => $this->mode == 'prod' ? __DIR__  . '/CorreosWsdl/correos.wsdl' : './CorreosWsdl/correos_dev.wsdl',
+            SoapClient::WSDL_URL => $this->mode == 'prod' ? __DIR__  . '/CorreosWsdl/correos.wsdl' : __DIR__ . '/CorreosWsdl/correos_dev.wsdl',
             SoapClient::WSDL_CLASSMAP => ClassMap::get(),
             SoapClient::WSDL_STREAM_CONTEXT => stream_context_create([
                 'ssl' => [
@@ -61,31 +57,11 @@ class CorreosConfig
                     'allow_self_signed' => true
                 ]
             ]),
-        ];;
-    }
+        ];
 
-    /**
-     * @return string
-     */
-    public function getLogin()
-    {
-        return $this->login;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
+        $this->clientNumber = $clientNumber;
+        $this->clientContractNumber = $clientContractNumber;
+        $this->clientCode = $clientCode;
     }
 
     /**
@@ -95,4 +71,29 @@ class CorreosConfig
     {
         return $this->options;
     }
+
+    /**
+     * @return string
+     */
+    public function getClientNumber()
+    {
+        return $this->clientNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientContractNumber()
+    {
+        return $this->clientContractNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClientCode()
+    {
+        return $this->clientCode;
+    }
+
 }

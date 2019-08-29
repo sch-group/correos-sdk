@@ -32,14 +32,21 @@ class InitTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
         $config = (new IniReader())->readFile(__DIR__ . '/config.ini');
-        $correosConfig = new CorreosConfig($config['login'], $config['password'], $config['url']);
+        $correosConfig = new CorreosConfig(
+            $config['login'],
+            $config['password'],
+            $config['client_code'],
+            $config['client_number'],
+            $config['client_contract_number'],
+            'dev');
         $this->client = new CorreosConnector($correosConfig);
     }
 
     public function testAuth()
     {
-        $byteCode = $this->client->printReceipt();
-        print_r($byteCode);
+//        $byteCode = $this->client->printReceipt();
+        $response = $this->client->createShipment();
+        print_r($response);
         die();
         print_r(__DIR__);
         return;

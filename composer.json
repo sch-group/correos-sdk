@@ -9,7 +9,8 @@
         "ext-dom": "*",
         "ext-libxml": "*",
         "ext-json": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "wsdltophp/packagegenerator": "^3.2"
     },
     "require-dev": {
         "predis/predis": "1.1.1",
