@@ -1,0 +1,41 @@
+{
+    "name": "sch-group/correos",
+    "description": "Correos PHP SDK delivery service connector",
+    "type": "library",
+    "require": {
+        "php": "^7.1",
+        "predis/predis": "^1.1.1",
+        "ext-soap": "*",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {
+        "predis/predis": "1.1.1",
+        "piwik/ini": "^2.0",
+        "phpunit/phpunit": "~6.5.5",
+        "ext-soap": "*",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "aahmetgaliev",
+            "email": "ainur_ahmetgalie@mail.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "CorreosSdk\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CorreosSdk\\Tests\\": "tests/"
+        }
+    }
+}
