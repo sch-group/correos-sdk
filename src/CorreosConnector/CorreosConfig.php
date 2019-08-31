@@ -9,6 +9,7 @@ use CorreosSdk\Client\SoapClient;
 
 class CorreosConfig
 {
+    CONST TOTAL_BULTOS = 1;
     /**
      * @var array
      */
@@ -32,6 +33,12 @@ class CorreosConfig
     private $clientContractNumber;
 
     /**
+     * @var string
+     */
+    private $care;
+
+
+    /**
      * CorreosConnector constructor.
      * @param string $login
      * @param string $password
@@ -39,7 +46,7 @@ class CorreosConfig
      * @param string $clientContractNumber
      * @param string $mode
      */
-    public function __construct(string $login,string $password, string $clientCode ,string $clientNumber, string $clientContractNumber, $mode = 'prod')
+    public function __construct(string $login,string $password, string $clientCode, $mode = 'prod')
     {
         $this->mode = $mode;
 
@@ -58,11 +65,10 @@ class CorreosConfig
                 ]
             ]),
         ];
-
-        $this->clientNumber = $clientNumber;
-        $this->clientContractNumber = $clientContractNumber;
         $this->clientCode = $clientCode;
     }
+
+
 
     /**
      * @return array
@@ -94,6 +100,30 @@ class CorreosConfig
     public function getClientCode()
     {
         return $this->clientCode;
+    }
+
+    /**
+     * @param string $clientNumber
+     */
+    public function setClientNumber($clientNumber)
+    {
+        $this->clientNumber = $clientNumber;
+    }
+
+    /**
+     * @param string $clientContractNumber
+     */
+    public function setClientContractNumber($clientContractNumber)
+    {
+        $this->clientContractNumber = $clientContractNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCare()
+    {
+        return $this->care ?? "000000";
     }
 
 }

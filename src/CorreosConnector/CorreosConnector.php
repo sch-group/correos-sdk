@@ -2,6 +2,8 @@
 
 namespace CorreosSdk\CorreosConnector;
 
+use CorreosSdk\MainComponents\Invoice;
+use CorreosSdk\MainComponents\SenderUnitedIdentity;
 use CorreosSdk\ServiceType\Pre;
 use CorreosSdk\ServiceType\Solicitud;
 use CorreosSdk\StructType\ADUANATYPE;
@@ -19,123 +21,88 @@ use CorreosSdk\StructType\SolicitudEtiqueta;
 
 class CorreosConnector
 {
+    CONST XML_TYPE_REQUEST = "1";
+
+    const PDF_TYPE_REQUEST = "2";
+
     /**
      * @var CorreosConfig
      */
-   private $correosConfig;
+    private $correosConfig;
+
+    /**
+     * @var SenderUnitedIdentity
+     */
+    private $senderUnitedIdentity;
 
     /**
      * CorreosConnector constructor.
      * @param CorreosConfig $correosConfig
+     * @param SenderUnitedIdentity $senderUnitedIdentity
      */
-    public function __construct(CorreosConfig $correosConfig)
+    public function __construct(CorreosConfig $correosConfig, SenderUnitedIdentity $senderUnitedIdentity)
     {
         $this->correosConfig = $correosConfig;
+        $this->senderUnitedIdentity = $senderUnitedIdentity;
     }
 
-    public function printReceipt()
+//    public function printReceipt()
+//    {
+//        $documentationService = new Solicitud($this->correosConfig->getOptions());
+//        $codEtiquetador = "69RH"; // CLIENT CODE
+//        $numCliente = "81099174"; // CLIENT NUMBER
+//        $numContrator = "54034824"; // CLIENT CONTRACT NUMBER
+//        $care = "000000"; // insurance
+//
+//        $SolicitudEtiqueta = new SolicitudEtiqueta(
+//            "27-08-2019 06:24:00",
+//            $codEtiquetador,
+//            $numContrator,
+//            $numCliente,
+//            "LX403740086ES",
+//            $care,
+//            "2"
+//        );
+//
+//        $result = $documentationService->SolicitudEtiquetaOp($SolicitudEtiqueta);
+//        $file = $result->Bulto->Etiqueta->Etiqueta_pdf->Fichero;
+//
+//        return $file;
+//    }
+
+
+    public function createShipment(Invoice $invoice)
     {
-        $documentationService = new Solicitud($this->correosConfig->getOptions());
-        $codEtiquetador = "69RH"; // CLIENT CODE
-        $numCliente = "81099174"; // CLIENT NUMBER
-        $numContrator = "54034824"; // CLIENT CONTRACT NUMBER
-        $care = "000000"; // insurance
 
-        $SolicitudEtiqueta = new SolicitudEtiqueta(
-            "27-08-2019 06:24:00",
-            $codEtiquetador,
-            $numContrator,
-            $numCliente,
-            "LX403740086ES",
-            $care,
-            "2"
-        );
-
-        $result = $documentationService->SolicitudEtiquetaOp($SolicitudEtiqueta);
-        $file = $result->Bulto->Etiqueta->Etiqueta_pdf->Fichero;
-
-        return $file;
-    }
-
-
-    public function createShipment()
-    {
-        $date = (new \DateTime('now'))->format('d-m-Y H:m:s'); // CURRENT TIME
-        $codEtiquetador = "XXX1"; // CLIENT CODE
-        $numCliente = "81099174"; // CLIENT NUMBER
-        $numContrator = "54034824"; // CLIENT CONTRACT NUMBER
-        $care = "000000"; // insurance
-
-        // SENDER
-        $remitenteDireccion = "VIA DUBLIN 7";
-        $remitenteNumero = "42";
-        $remitenteLocalidad = "MADRID";
-        $remitenteProvincia = "MADRID";
-        $remitenteCP = "28001"; // POST code
-        $remitenteIdentifcacion = new IDENTIFICACIONTYPE(null);
-        $remitenteIdentifcacion->setApellido1("Maynovsky");
-        $remitenteIdentifcacion->setNombre("Marat");
-
-
-        $remitenteIdentifcacion = new IDENTIFICACIONTYPE(null);
-        $remitenteIdentifcacion->setApellido1("Maynovsky");
-        $remitenteIdentifcacion->setNombre("Marat");
-
-
-        $remitenteDatosDireccion = new DIRECCIONTYPE(
-            null,
-            $remitenteDireccion,
-            $remitenteNumero,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $remitenteLocalidad,
-            $remitenteProvincia
-        );
-
-
-        // SENDER
-        $remitente = new DATOSREMITENTETYPE(
-            $remitenteIdentifcacion,
-            $remitenteDatosDireccion,
-            $remitenteCP,
-            null,
-            null,
-            "test@example.com",
-            null
-        );
-
-        // RECEIVER
-        $destinatarioIdentifcacion = new IDENTIFICACIONTYPE(null);
-        $destinatarioIdentifcacion->setNombre('Antonio');
-        $destinatarioDatosDireccion = new DIRECCIONTYPE(
-            null,
-            "Bichurina",
-            "11",
-            null,
-            null,
-            null,
-            null,
-            null,
-            "Kazan",
-            "Tatarstan"
-        );
-
-        $destinatario = new DATOSDESTINATARIOTYPE(
-            $destinatarioIdentifcacion,
-            $destinatarioDatosDireccion,
-            null,
-            null,
-            "423000",
-            "RU",
-            null,
-            null,
-            "879377790921",
-            "admin@kazanworkout.ru",
-            null
-        );
+//        // RECEIVER
+//        $destinatarioIdentifcacion = new IDENTIFICACIONTYPE(null);
+//        $destinatarioIdentifcacion->setNombre('Antonio');
+//        $destinatarioDatosDireccion = new DIRECCIONTYPE(
+//            null,
+//            "Bichurina",
+//            "11",
+//            null,
+//            null,
+//            null,
+//            null,
+//            null,
+//            "Kazan",
+//            "Tatarstan"
+//        );
+//
+//        $destinatario = new DATOSDESTINATARIOTYPE(
+//            $destinatarioIdentifcacion,
+//            $destinatarioDatosDireccion,
+//            null,
+//            null,
+//            "423000",
+//            "RU",
+//            null,
+//            null,
+//            "879377790921",
+//            "admin@kazanworkout.ru",
+//            null
+//        );
 
         $peso = new PESOTYPE("R", "600");
         $pesos = new Pesos([$peso]);
@@ -223,15 +190,15 @@ class CorreosConnector
         $envio->setPesos($pesos);
 
         $preRegistroEnvio = new PreregistroEnvio(
-            $date,
-            $codEtiquetador,
-            $numContrator,
-            $numCliente,
-            $care,
-            "1",
-            "1",
-            $remitente,
-            $destinatario,
+            (new \DateTime('now'))->format('d-m-Y H:m:s'), // CURRENT TIME,
+            $this->correosConfig->getClientCode(),
+            $this->correosConfig->getClientContractNumber(),
+            $this->correosConfig->getClientNumber(),
+            $this->correosConfig->getCare(),
+            CorreosConfig::TOTAL_BULTOS,
+            self::XML_TYPE_REQUEST,
+            $this->senderUnitedIdentity->buildSenderIdentity(),
+            $invoice->getReceiverUnitedIdentity()->buildReceiverIdentity(),
             $envio,
             null,
             null,
@@ -241,7 +208,8 @@ class CorreosConnector
         $result = $pre->PreRegistro($preRegistroEnvio); // SOAP REQUEST
 
         echo "<pre>";
-        var_dump($result); die;
+        var_dump($result);
+        die;
 
         echo "<pre>";
 

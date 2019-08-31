@@ -6,6 +6,12 @@ use CorreosSdk\ClassMap;
 use CorreosSdk\Client\SoapClient;
 use CorreosSdk\CorreosConnector\CorreosConfig;
 use CorreosSdk\CorreosConnector\CorreosConnector;
+use CorreosSdk\MainComponents\Address;
+use CorreosSdk\MainComponents\Identification;
+use CorreosSdk\MainComponents\Invoice;
+use CorreosSdk\MainComponents\ReceiverUnitedIdentity;
+use CorreosSdk\MainComponents\SenderIdentification;
+use CorreosSdk\MainComponents\SenderUnitedIdentity;
 use CorreosSdk\ServiceType\Solicitud;
 use CorreosSdk\StructType\ADUANATYPE;
 use CorreosSdk\StructType\DATOSADUANATYPE;
@@ -36,16 +42,55 @@ class InitTest extends TestCase
             $config['login'],
             $config['password'],
             $config['client_code'],
-            $config['client_number'],
-            $config['client_contract_number'],
             'dev');
-        $this->client = new CorreosConnector($correosConfig);
+
+        $senderAddress = new Address(
+            $config['sender_city_name'],
+            $config['sender_street_name'],
+            $config['sender_province_name'],
+            $config['sender_street_number']
+        );
+        $senderIdentification = new Identification(
+            $config['sender_name'],
+            $config['sender_company_name'],
+            $config['sender_name'],
+            $config['sender_first_name'],
+            $config['sender_second_name']
+        );
+        $senderUnitedIdentity = new SenderUnitedIdentity(
+            $senderAddress,
+            $senderIdentification,
+            $config['sender_postcode'],
+            $config['sender_phone'],
+            $config['sender_email']
+        );
+
+        $this->client = new CorreosConnector($correosConfig, $senderUnitedIdentity);
     }
 
     public function testAuth()
     {
 //        $byteCode = $this->client->printReceipt();
-        $response = $this->client->createShipment();
+        $receiverAddress = new Address(
+            "Barcelona",
+            "Delpotro street",
+            "Catalonia",
+            "20"
+        );
+        $receiverIdentity = new Identification(
+            "Ainuro Mainurio"
+        );
+        $receiverUnitedIdentity = new ReceiverUnitedIdentity(
+            $receiverAddress,
+            $receiverIdentity,
+            "42300", // must be less than < 6
+            "423000",
+            "RU",
+            "89274269594",
+            "ainur_ahmetgalie@mail.ru"
+        );
+        $invoice = new Invoice($receiverUnitedIdentity);
+        $response = $this->client->createShipment($invoice);
         print_r($response);
         die();
         print_r(__DIR__);
