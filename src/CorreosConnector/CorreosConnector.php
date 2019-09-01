@@ -74,121 +74,6 @@ class CorreosConnector
     public function createShipment(Invoice $invoice)
     {
 
-//        // RECEIVER
-//        $destinatarioIdentifcacion = new IDENTIFICACIONTYPE(null);
-//        $destinatarioIdentifcacion->setNombre('Antonio');
-//        $destinatarioDatosDireccion = new DIRECCIONTYPE(
-//            null,
-//            "Bichurina",
-//            "11",
-//            null,
-//            null,
-//            null,
-//            null,
-//            null,
-//            "Kazan",
-//            "Tatarstan"
-//        );
-//
-//        $destinatario = new DATOSDESTINATARIOTYPE(
-//            $destinatarioIdentifcacion,
-//            $destinatarioDatosDireccion,
-//            null,
-//            null,
-//            "423000",
-//            "RU",
-//            null,
-//            null,
-//            "879377790921",
-//            "admin@kazanworkout.ru",
-//            null
-//        );
-
-        $peso = new PESOTYPE("R", "600");
-        $pesos = new Pesos([$peso]);
-
-
-        // PRODUCTS TO SHIPPING
-        $envio = new DATOSENVIOTYPE(
-            null, // discount
-            null, // delivery mode
-            null,
-            "30",
-            "15",
-            "1",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "A",
-            new ADUANATYPE(
-                "2",
-                "S",
-                null,
-                null,
-                new DescAduanera(
-                    [
-                        new DATOSADUANATYPE(
-                            "1",
-                            "83",
-                            "200",
-                            "10",
-                            null,
-                            null
-                        )
-                    ]
-                ),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-            ),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-
-        $envio->setCodProducto("S0360"); // SET TARIFF
-        $envio->setReferenciaCliente("JVB000001");
-        $envio->setTipoFranqueo("FP");
-        $envio->setModalidadEntrega("ST");
-        $envio->setPesos($pesos);
-
         $preRegistroEnvio = new PreregistroEnvio(
             (new \DateTime('now'))->format('d-m-Y H:m:s'), // CURRENT TIME,
             $this->correosConfig->getClientCode(),
@@ -199,7 +84,7 @@ class CorreosConnector
             self::XML_TYPE_REQUEST,
             $this->senderUnitedIdentity->buildSenderIdentity(),
             $invoice->getReceiverUnitedIdentity()->buildReceiverIdentity(),
-            $envio,
+            $invoice->getSendingContent()->buildSendingContent(),
             null,
             null,
             null
