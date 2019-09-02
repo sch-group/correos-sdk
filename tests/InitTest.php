@@ -75,7 +75,6 @@ class InitTest extends TestCase
 
     public function testAuth()
     {
-//        $byteCode = $this->client->printReceipt();
         $totalPrice = 5000.32;
         $totalPrice = $totalPrice * 100;
         $receiverAddress = new Address(
