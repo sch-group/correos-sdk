@@ -1,7 +1,7 @@
 <?php
 
 
-namespace CorreosSdk\MainComponents;
+namespace CorreosSdk\Factories;
 
 
 use CorreosSdk\StructType\Pesos;
@@ -25,7 +25,7 @@ class PackageSize
     private $width;
 
     /**
-     * @var string
+     * @var int
      */
     private $weight;
 
@@ -34,9 +34,9 @@ class PackageSize
      * @param int $length
      * @param int $height
      * @param int $width
-     * @param Weight $weight
+     * @param int $weight
      */
-    public function __construct(int $length, int $height, int $width, string $weight)
+    public function __construct(int $length, int $height, int $width, int $weight)
     {
         $this->length = $length;
         $this->height = $height;
@@ -72,7 +72,7 @@ class PackageSize
      */
     public function getWeight(): Pesos
     {
-        $peso = new PESOTYPE("R", $this->weight);
+        $peso = new PESOTYPE("R", strval($this->weight));
         return new Pesos([$peso]);
     }
 }

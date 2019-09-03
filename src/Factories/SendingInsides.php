@@ -1,7 +1,7 @@
 <?php
 
 
-namespace CorreosSdk\MainComponents;
+namespace CorreosSdk\Factories;
 
 
 use CorreosSdk\StructType\ADUANATYPE;
@@ -24,6 +24,10 @@ class SendingInsides
     const RETURNED_GOODS_CONTENT_TYPE = '5';
 
     const OTHER_CONTENT_TYPE = '6';
+
+    const YES_CHOICE = 'S';
+
+    const NO_CHOICE = 'N';
 
     /**
      * @var string

@@ -2,36 +2,21 @@
 
 namespace CorreosSdk\Tests;
 
-use CorreosSdk\ClassMap;
-use CorreosSdk\Client\SoapClient;
-use CorreosSdk\CorreosConnector\CorreosConfig;
-use CorreosSdk\CorreosConnector\CorreosConnector;
-use CorreosSdk\MainComponents\Address;
-use CorreosSdk\MainComponents\Identification;
-use CorreosSdk\MainComponents\Invoice;
-use CorreosSdk\MainComponents\PackageSize;
-use CorreosSdk\MainComponents\ProductDescription;
-use CorreosSdk\MainComponents\ProductList;
-use CorreosSdk\MainComponents\ReceiverUnitedIdentity;
-use CorreosSdk\MainComponents\SenderIdentification;
-use CorreosSdk\MainComponents\SenderUnitedIdentity;
-use CorreosSdk\MainComponents\SendingContent;
-use CorreosSdk\MainComponents\SendingInsides;
-use CorreosSdk\ServiceType\Solicitud;
-use CorreosSdk\StructType\ADUANATYPE;
-use CorreosSdk\StructType\DATOSADUANATYPE;
-use CorreosSdk\StructType\DATOSDESTINATARIOTYPE;
-use CorreosSdk\StructType\DATOSENVIOTYPE;
-use CorreosSdk\StructType\DATOSREMITENTETYPE;
-use CorreosSdk\StructType\DescAduanera;
-use CorreosSdk\StructType\DIRECCIONTYPE;
-use CorreosSdk\StructType\IDENTIFICACIONTYPE;
-use CorreosSdk\StructType\Pesos;
-use CorreosSdk\StructType\PESOTYPE;
-use CorreosSdk\StructType\PreregistroEnvio;
-use CorreosSdk\StructType\SolicitudEtiqueta;
 use Matomo\Ini\IniReader;
 use PHPUnit\Framework\TestCase;
+use CorreosSdk\CorreosConnector\{CorreosConfig, CorreosConnector};
+use CorreosSdk\Factories\ {Address,
+    Identification,
+    Invoice,
+    PackageSize,
+    ProductDescription,
+    ProductList,
+    ReceiverUnitedIdentity,
+    SenderUnitedIdentity,
+    SendingContent,
+    SendingInsides
+};
+
 
 class InitTest extends TestCase
 {
@@ -57,10 +42,10 @@ class InitTest extends TestCase
         );
         $senderIdentification = new Identification(
             $config['sender_name'],
-            $config['sender_company_name'],
-            $config['sender_name'],
             $config['sender_first_name'],
-            $config['sender_second_name']
+            $config['sender_second_name'],
+            $config['sender_company_name'],
+            $config['sender_name']
         );
         $senderUnitedIdentity = new SenderUnitedIdentity(
             $senderAddress,
@@ -73,18 +58,22 @@ class InitTest extends TestCase
         $this->client = new CorreosConnector($correosConfig, $senderUnitedIdentity);
     }
 
-    public function testAuth()
+    protected function createShipment() : Invoice
     {
         $totalPrice = 5000.32;
         $totalPrice = $totalPrice * 100;
         $receiverAddress = new Address(
-            "Barcelona",
-            "Delpotro street",
-            "Catalonia",
+            "TEST CITY NAME",
+            "TEST STREET NAME",
+            "TEST NAME",
             "20"
         );
         $receiverIdentity = new Identification(
-            "Ainuro Mainurio"
+            "TEST TEST",
+            null,
+            null,
+            null,
+            null
         );
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,
@@ -116,7 +105,7 @@ class InitTest extends TestCase
             15,
             15,
             15,
-            "500"
+            500
         );
 
         $sendingContent = new SendingContent(
@@ -127,9 +116,12 @@ class InitTest extends TestCase
             $sendingInsides
         );
         $sendingContent->setCustomerShipmentCode("order: 123456");
+
         $invoice = new Invoice($receiverUnitedIdentity, $sendingContent);
-        $response = $this->client->createShipment($invoice);
-        print_r($response);
+
+        $createdInvoice = $this->client->createShipment($invoice);
+
+        return $createdInvoice;
     }
 
 }

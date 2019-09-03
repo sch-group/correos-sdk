@@ -1,6 +1,6 @@
 <?php
 
-namespace CorreosSdk\MainComponents;
+namespace CorreosSdk\Factories;
 
 use CorreosSdk\StructType\IDENTIFICACIONTYPE;
 
@@ -51,7 +51,7 @@ class Identification
      * @param string|null $lastName
      * @param string $taxIdentificationNumber
      */
-    public function __construct(string $senderName = null, string $companyName = null, string $contactPerson = null, string $firstName = null, string $lastName = null, string $taxIdentificationNumber = null)
+    public function __construct(string $senderName = null, string $firstName = null, string $lastName = null, string $companyName = null, string $contactPerson = null, string $taxIdentificationNumber = null)
     {
         $this->senderName = $senderName;
         $this->firstName = $firstName;

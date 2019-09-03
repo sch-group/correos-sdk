@@ -1,6 +1,6 @@
 <?php
 
-namespace CorreosSdk\MainComponents;
+namespace CorreosSdk\Factories;
 
 use CorreosSdk\StructType\SMSTYPE;
 
