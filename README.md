@@ -46,7 +46,7 @@ Create Shipment:
                   "48059", // must be less than < 6
                   "48059",
                   "US",
-                  "89274269594",
+                  "89274269592",
                   "ainur_ahmetgalie@mail.ru"
               );
       
@@ -139,8 +139,8 @@ Update shipment :
         $productList->addProduct($product);
 
         $sendingInsides = new SendingInsides(
-            "2", // GOODS,
-            "S", // Y
+            SendingInsides::GOODS_CONTENT_TYPE, // GOODS,, // GOODS,
+            SendingInsides::YES_CHOICE, // S
             $totalPrice > 50000 ? SendingInsides::YES_CHOICE : null,
             $productList,
             $totalPrice > 50000 ? SendingInsides::NO_CHOICE : null
