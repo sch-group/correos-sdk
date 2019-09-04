@@ -39,10 +39,6 @@ Create Shipment:
               );
               $receiverIdentity = new Identification(
                   "TEST TEST",
-                  null,
-                  null,
-                  null,
-                  null
               );
               $receiverUnitedIdentity = new ReceiverUnitedIdentity(
                   $receiverAddress,
@@ -121,19 +117,15 @@ Update shipment :
         );
         $receiverIdentity = new Identification(
             "TEST TEST",
-            null,
-            null,
-            null,
-            null
         );
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,
             $receiverIdentity,
             "42300", // must be less than < 6
-            "480590",
-            "RU",
-            "89274269592",
-            "ainur_ahmetgalie@mail.ru"
+            "480590", // Zip
+            "RU", // ISO CODE
+            "+79274269591",
+            "ainurio@mail.ru"
 
         );
 
