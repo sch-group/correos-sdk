@@ -17,10 +17,6 @@ Initialization
         );
         $senderIdentification = new Identification(
             $config['sender_name'],
-            $config['sender_company_name'],
-            $config['sender_name'],
-            $config['sender_first_name'],
-            $config['sender_second_name']
         );
         $senderUnitedIdentity = new SenderUnitedIdentity(
             $senderAddress,
@@ -35,31 +31,117 @@ Initialization
 ```
 Create Shipment:
 ```
-        $totalPrice = 500032; // Eurconts
         $receiverAddress = new Address(
-            "Barcelona",
-            "Delpotro street",
-            "Catalonia",
+                  "TEST LAKEPORT",
+                  "TEST STREET NAME",
+                  "TEST NAME",
+                  "20"
+              );
+              $receiverIdentity = new Identification(
+                  "TEST TEST",
+                  null,
+                  null,
+                  null,
+                  null
+              );
+              $receiverUnitedIdentity = new ReceiverUnitedIdentity(
+                  $receiverAddress,
+                  $receiverIdentity,
+                  "48059", // must be less than < 6
+                  "48059",
+                  "US",
+                  "89274269594",
+                  "ainur_ahmetgalie@mail.ru"
+              );
+      
+              $product = new ProductDescription(
+                  '1',
+                  '189',
+                  '200',
+                  '96000'
+              );
+              $productList = new ProductList();
+              $productList->addProduct($product);
+      
+              $sendingInsides = new SendingInsides(
+                  SendingInsides::GOODS_CONTENT_TYPE, // GOODS,
+                  SendingInsides::YES_CHOICE, // Y
+                   SendingInsides::YES_CHOICE,
+                  $productList,
+                  SendingInsides::NO_CHOICE
+              );
+              $packageSize = new PackageSize(
+                  15,
+                  15,
+                  15,
+                  500
+              );
+      
+              $sendingContent = new SendingContent(
+                  SendingContent::PAQ_LIGHT_INTERNATIONAL_TARIFF, // PAQ LIGHT INTERNATIONAL(I)
+                  SendingContent::POSTAGE_PAID_PAYMENT_TYPE,
+                  SendingContent::STANDARD_DELIVERY_MODE,
+                  $packageSize,
+                  $sendingInsides
+              );
+      
+              $sendingContent->setCustomerShipmentCode("test order: 123456");
+      
+              $shipment = new Shipment($receiverUnitedIdentity, $sendingContent);
+      
+              $createdInvoice = $this->client->createShipment($shipment);
+```
+Print labels:
+
+```
+    $trackNumber = $shipment->getClippedTrackNumber();
+
+    $createdShipmentDateTime = $shipment->getDateRequest();
+
+    $labelPdfByteCode = $this->client->printLabel($trackNumber, $createdShipmentDateTime);
+
+```
+
+Cancel shipment :
+```
+    $trackNumber = $invoice->getClippedTrackNumber();
+
+    $isCancelShipment = $this->client->cancelShipment($trackNumber);
+
+```
+
+Update shipment :
+
+```
+   $receiverAddress = new Address(
+            "TEST CITY NAME",
+            "TEST STREET NAME",
+            "MADRIDO",
             "20"
         );
         $receiverIdentity = new Identification(
-            "Ainuro Mainurio"
+            "TEST TEST",
+            null,
+            null,
+            null,
+            null
         );
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,
             $receiverIdentity,
-            "42300", // must be less than < 6 postcode
-            "423000", international postcode
-            "RU", // country iso
-            "89274269594",
+            "42300", // must be less than < 6
+            "480590",
+            "RU",
+            "89274269592",
             "ainur_ahmetgalie@mail.ru"
+
         );
 
         $product = new ProductDescription(
-            '1', // quantity 
-            '189', // code of product Annex 2
-            '200', // weight 
-            '96000' // price 
+            '1',
+            '189',
+            '200',
+            '96000'
         );
         $productList = new ProductList();
         $productList->addProduct($product);
@@ -67,15 +149,15 @@ Create Shipment:
         $sendingInsides = new SendingInsides(
             "2", // GOODS,
             "S", // Y
-            $totalPrice > 50000 ? "S" : null,
+            $totalPrice > 50000 ? SendingInsides::YES_CHOICE : null,
             $productList,
-            $totalPrice > 50000 ? "N" : null
+            $totalPrice > 50000 ? SendingInsides::NO_CHOICE : null
         );
         $packageSize = new PackageSize(
-            15, // heigh
-            15, // length
-            15, // width
-            "500" // weight
+            15,
+            15,
+            15,
+            500
         );
 
         $sendingContent = new SendingContent(
@@ -85,9 +167,11 @@ Create Shipment:
             $packageSize,
             $sendingInsides
         );
-        $sendingContent->setCustomerShipmentCode("order: 123456");
 
-        $invoice = new Invoice($receiverUnitedIdentity, $sendingContent);
-        $response = $this->client->createShipment($invoice);
+        $shipment = new Shipment($receiverUnitedIdentity, $sendingContent);
+        $shipment->setTrackNumber($createdShipment->getTrackNumber());
+        $shipment->setDateRequest($createdShipment->getDateRequest());
 
-        eche $ingoice->getInvoiceNumber()
+        $shipment = $this->client->updateShipment($shipment);
+
+```

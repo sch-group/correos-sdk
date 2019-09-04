@@ -5,17 +5,16 @@ namespace CorreosSdk\Tests;
 use Matomo\Ini\IniReader;
 use PHPUnit\Framework\TestCase;
 use CorreosSdk\CorreosConnector\{CorreosConfig, CorreosConnector};
-use CorreosSdk\Factories\ {Address,
+use CorreosSdk\Factories\{Address,
     Identification,
-    Invoice,
     PackageSize,
     ProductDescription,
     ProductList,
     ReceiverUnitedIdentity,
     SenderUnitedIdentity,
     SendingContent,
-    SendingInsides
-};
+    SendingInsides,
+    Shipment};
 
 
 class InitTest extends TestCase
@@ -58,12 +57,12 @@ class InitTest extends TestCase
         $this->client = new CorreosConnector($correosConfig, $senderUnitedIdentity);
     }
 
-    protected function createShipment() : Invoice
+    protected function createShipment() : Shipment
     {
         $totalPrice = 5000.32;
         $totalPrice = $totalPrice * 100;
         $receiverAddress = new Address(
-            "TEST CITY NAME",
+            "TEST LAKEPORT",
             "TEST STREET NAME",
             "TEST NAME",
             "20"
@@ -78,9 +77,9 @@ class InitTest extends TestCase
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,
             $receiverIdentity,
-            "42300", // must be less than < 6
-            "423000",
-            "RU",
+            "48059", // must be less than < 6
+            "48059",
+            "US",
             "89274269594",
             "ainur_ahmetgalie@mail.ru"
         );
@@ -95,11 +94,11 @@ class InitTest extends TestCase
         $productList->addProduct($product);
 
         $sendingInsides = new SendingInsides(
-            "2", // GOODS,
-            "S", // Y
-            $totalPrice > 50000 ? "S" : null,
+            SendingInsides::GOODS_CONTENT_TYPE, // GOODS,
+            SendingInsides::YES_CHOICE, // Y
+             SendingInsides::YES_CHOICE,
             $productList,
-            $totalPrice > 50000 ? "N" : null
+            SendingInsides::NO_CHOICE
         );
         $packageSize = new PackageSize(
             15,
@@ -115,11 +114,12 @@ class InitTest extends TestCase
             $packageSize,
             $sendingInsides
         );
-        $sendingContent->setCustomerShipmentCode("order: 123456");
 
-        $invoice = new Invoice($receiverUnitedIdentity, $sendingContent);
+        $sendingContent->setCustomerShipmentCode("test order: 123456");
 
-        $createdInvoice = $this->client->createShipment($invoice);
+        $shipment = new Shipment($receiverUnitedIdentity, $sendingContent);
+
+        $createdInvoice = $this->client->createShipment($shipment);
 
         return $createdInvoice;
     }

@@ -4,10 +4,13 @@
 namespace CorreosSdk\Factories;
 
 
+use CorreosSdk\StructType\DATOSDESTINATARIOMODIFTYPE;
 use CorreosSdk\StructType\DATOSDESTINATARIOTYPE;
 
 class ReceiverUnitedIdentity
 {
+
+    const YES_INTERNATIONAL_SHIPMENT = "S";
     /**
      * @var Address
      */
@@ -35,11 +38,13 @@ class ReceiverUnitedIdentity
     private $countryISO;
 
     /**
+     * DestinoApartadoPostalinternacional
      * @var string
      */
     private $isInternationalPostBox;
 
     /**
+     * ApartadoPostaldestino
      * @var string
      */
     private $spanishPostBoxNumber;
@@ -96,7 +101,8 @@ class ReceiverUnitedIdentity
         string $isInternationalPostBox = null,
         string $spanishPostBoxNumber = null,
         Sms $sms = null
-    ) {
+    )
+    {
         $this->receiverAddress = $receiverAddress;
         $this->receiverIdentity = $receiverIdentity;
         $this->postcode = $postcode;
@@ -109,14 +115,15 @@ class ReceiverUnitedIdentity
         $this->sms = $sms;
     }
 
-
-
-    public function buildReceiverIdentity() : DATOSDESTINATARIOTYPE
+    /**
+     * @return DATOSDESTINATARIOTYPE
+     */
+    public function buildReceiverIdentity(): DATOSDESTINATARIOTYPE
     {
         return new DATOSDESTINATARIOTYPE(
             $this->receiverIdentity->buildIdentification(),
             $this->receiverAddress->buildDirection(),
-            $this->secondReceiverAddress,
+            !empty($this->secondReceiverAddress) ? $this->secondReceiverAddress->buildDirection() : null,
             $this->postcode,
             $this->internationalPostcode,
             $this->countryISO,
@@ -126,6 +133,109 @@ class ReceiverUnitedIdentity
             $this->receiverEmail,
             $this->sms
         );
+    }
+
+    public function buildUpdateReceiverIdentity(): DATOSDESTINATARIOMODIFTYPE
+    {
+        return new DATOSDESTINATARIOMODIFTYPE(
+            $this->receiverIdentity->buildIdentification(),
+            $this->receiverAddress->buildDirection(),
+            $this->getInternationalPostcode(),
+            $this->getCountryISO(),
+            $this->getIsInternationalPostBox(),
+            $this->getSpanishPostBoxNumber(),
+            $this->getReceiverPhone(),
+            $this->getReceiverEmail(),
+            !empty($this->getSms()) ? $this->getSms()->buildSMS() : null
+        );
+    }
+
+    /**
+     * @return Address
+     */
+    public function getReceiverAddress(): Address
+    {
+        return $this->receiverAddress;
+    }
+
+    /**
+     * @return Identification
+     */
+    public function getReceiverIdentity(): Identification
+    {
+        return $this->receiverIdentity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostcode(): string
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInternationalPostcode(): string
+    {
+        return $this->internationalPostcode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryISO(): string
+    {
+        return $this->countryISO;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIsInternationalPostBox(): ?string
+    {
+        return $this->isInternationalPostBox;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpanishPostBoxNumber(): ?string
+    {
+        return $this->spanishPostBoxNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReceiverPhone(): ?string
+    {
+        return $this->receiverPhone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReceiverEmail(): ?string
+    {
+        return $this->receiverEmail;
+    }
+
+    /**
+     * @return Sms
+     */
+    public function getSms(): ?Sms
+    {
+        return $this->sms;
+    }
+
+    /**
+     * @return Address
+     */
+    public function getSecondReceiverAddress(): Address
+    {
+        return $this->secondReceiverAddress;
     }
 
 }

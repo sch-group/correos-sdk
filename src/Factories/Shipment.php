@@ -6,7 +6,7 @@ namespace CorreosSdk\Factories;
 
 use CorreosSdk\StructType\DIRECCIONTYPE;
 
-class Invoice
+class Shipment
 {
     /**
      * @var string

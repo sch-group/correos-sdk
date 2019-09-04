@@ -14,9 +14,9 @@ class CancelShipmentTest extends InitTest
      */
     public function testCancelShipment()
     {
-        $invoice = $this->createShipment();
+        $shipment = $this->createShipment();
 
-        $trackNumber = $invoice->getClippedTrackNumber();
+        $trackNumber = $shipment->getClippedTrackNumber();
 
         $isCancelShipment = $this->client->cancelShipment($trackNumber);
 

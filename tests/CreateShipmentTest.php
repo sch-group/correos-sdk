@@ -14,14 +14,15 @@ use CorreosSdk\Factories\ProductList;
 use CorreosSdk\Factories\ReceiverUnitedIdentity;
 use CorreosSdk\Factories\SendingContent;
 use CorreosSdk\Factories\SendingInsides;
+use CorreosSdk\Factories\Shipment;
 
 class CreateShipmentTest extends InitTest
 {
     public function testCreateShipment()
     {
-        $invoice = $this->createShipment();
+        $shipment = $this->createShipment();
 
-        $invoiceNumber = $invoice->getTrackNumber();
+        $invoiceNumber = $shipment->getTrackNumber();
 
         $this->assertNotEmpty($invoiceNumber);
 
@@ -87,9 +88,9 @@ class CreateShipmentTest extends InitTest
         );
         $sendingContent->setCustomerShipmentCode("order: 123456");
 
-        $invoice = new Invoice($receiverUnitedIdentity, $sendingContent);
+        $shipment = new Shipment($receiverUnitedIdentity, $sendingContent);
 
-        $invoice = $this->client->createShipment($invoice);
+        $createdShipment = $this->client->createShipment($shipment);
 
         $this->expectException(CorreosException::class);
 
@@ -155,9 +156,9 @@ class CreateShipmentTest extends InitTest
 
         $sendingContent->setCustomerShipmentCode("order: 123456");
 
-        $invoice = new Invoice($receiverUnitedIdentity, $sendingContent);
+        $shipment = new Shipment($receiverUnitedIdentity, $sendingContent);
 
-        $createdInvoice = $this->client->createShipment($invoice);
+        $createdShipment = $this->client->createShipment($shipment);
 
         $this->expectException(CorreosException::class);
     }

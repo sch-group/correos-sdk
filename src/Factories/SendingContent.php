@@ -6,6 +6,7 @@ namespace CorreosSdk\Factories;
 
 use CorreosSdk\StructType\ADUANATYPE;
 use CorreosSdk\StructType\DATOSADUANATYPE;
+use CorreosSdk\StructType\DATOSENVIOMODIFTYPE;
 use CorreosSdk\StructType\DATOSENVIOTYPE;
 use CorreosSdk\StructType\DescAduanera;
 use CorreosSdk\StructType\Pesos;
@@ -38,6 +39,12 @@ class SendingContent
     const ONLINE_PAYMENT_TYPE = 'ON';
 
     const PAQ_LIGHT_INTERNATIONAL_TARIFF  = "S0360";
+
+    const ALLOW_COMPLETE_MODIFICATION = '2';
+
+    const ALLOW_BASIC_MODIFICATION = '1';
+
+    const ALLOW_NO_MODIFICATION = '0';
 
     /**
      * CodProducto
@@ -242,6 +249,13 @@ class SendingContent
     private $accountNumberForCODPayment;
 
     /**
+     * TipoModificacion
+     * @var string
+     */
+    private $typeModification;
+
+
+    /**
      * SendingContent constructor.
      * @param string $tariffProductCode
      * @param string $paymentType
@@ -261,7 +275,7 @@ class SendingContent
     }
 
 
-    public function buildSendingContent()
+    public function buildSendingContent() : DATOSENVIOTYPE
     {
 
         $existDocumentList = !empty($this->documentList);
@@ -299,22 +313,71 @@ class SendingContent
             $existDocumentList ? $this->documentList->getThirdDocument()->getObservation() : null,
             $this->transportCompanyCode,
             $this->originalShipmentCode,
+            $this->originalAndReturnShipmentIndicator,
+            $this->isInsuredShipping,
+            $this->sumOfInsuranceInEuroCents,
+            $this->isCODInsured,
+            $this->sumOfCODInsuranceInEuroCents,
+            $this->typeOfCOD,
+            $this->accountNumberForCODPayment,
             null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
+            $this->typeModification
         );
 
         $envio->setCodProducto($this->tariffProductCode); // SET TARIFF
-        $envio->setReferenciaCliente("JVB000001");
+        $envio->setReferenciaCliente($this->customerShipmentCode);
         $envio->setTipoFranqueo($this->paymentType);
         $envio->setModalidadEntrega($this->deliveryMode);
         $envio->setPesos($this->packageSize->getWeight());
+
+        return $envio;
+    }
+
+    public function buildUpdateSendingContent() : DATOSENVIOMODIFTYPE
+    {
+        $existDocumentList = !empty($this->documentList);
+
+        $envio = new DATOSENVIOMODIFTYPE(
+            $this->customerShipmentCode,
+            null,
+            null,
+            $this->paymentType,
+            $this->frankingMachineNumber,
+            $this->frankedSumEuroCent,
+            $this->codePromotion,
+            $this->codeOfSelectedBranchMode,
+            $this->packageSize->getWeight(),
+            $this->packageSize->getLength(),
+            $this->packageSize->getHeight(),
+            $this->packageSize->getWidth(),
+            $this->additionalInfo,
+            $this->packingCode,
+            $this->codeOfShipmentBranch,
+            $this->expectedDepositDate,
+            $this->firstLineComments,
+            $this->secondLineComments,
+            $this->returnInstructions,
+            $this->sendingInsides->buildSendingInsides(),
+            $this->outWardCode,
+            $this->toPackageItems,
+            $this->deadlineReverseLogistic,
+            $this->returnInstructions,
+            $this->tapDestinationCode,
+            $this->correosPaqUserId,
+            $this->isHomePaq,
+            $existDocumentList ? $this->documentList->getFirstDocument()->getNameToScan() : null,
+            $existDocumentList ? $this->documentList->getFirstDocument()->getScanAndValidate() : null,
+            $existDocumentList ? $this->documentList->getFirstDocument()->getObservation() : null,
+            $existDocumentList ? $this->documentList->getSecondDocument()->getNameToScan() : null,
+            $existDocumentList ? $this->documentList->getSecondDocument()->getScanAndValidate() : null,
+            $existDocumentList ? $this->documentList->getSecondDocument()->getObservation() : null,
+            $existDocumentList ? $this->documentList->getThirdDocument()->getNameToScan() : null,
+            $existDocumentList ? $this->documentList->getThirdDocument()->getScanAndValidate() : null,
+            $existDocumentList ? $this->documentList->getThirdDocument()->getObservation() : null,
+            $this->transportCompanyCode,
+            $this->originalShipmentCode,
+            null
+        );
 
         return $envio;
     }

@@ -2,6 +2,7 @@
 
 namespace CorreosSdk\Factories;
 
+use CorreosSdk\StructType\DATOSREMITENTEMODIFTYPE;
 use CorreosSdk\StructType\DATOSREMITENTETYPE;
 
 class SenderUnitedIdentity
@@ -14,7 +15,7 @@ class SenderUnitedIdentity
 
     /**
      * TypoDirection
-     * @var SenderIdentification
+     * @var Identification
      */
     private $senderIdentification;
 
@@ -68,6 +69,9 @@ class SenderUnitedIdentity
         $this->sms = $sms;
     }
 
+    /**
+     * @return DATOSREMITENTETYPE
+     */
     public function buildSenderIdentity() : DATOSREMITENTETYPE
     {
         return new DATOSREMITENTETYPE(
@@ -80,4 +84,19 @@ class SenderUnitedIdentity
             $this->sms ? $this->sms->buildSMS() : null
         );
     }
+
+    /**
+     * @return DATOSREMITENTEMODIFTYPE
+     */
+    public function buildUpdateSenderIdentity() : DATOSREMITENTEMODIFTYPE
+    {
+        return new DATOSREMITENTEMODIFTYPE(
+            $this->senderIdentification->buildIdentification(),
+            $this->senderAddress->buildDirection(),
+            $this->contactPhone,
+            $this->email,
+            $this->sms ? $this->sms->buildSMS() : null
+        );
+    }
+
 }
