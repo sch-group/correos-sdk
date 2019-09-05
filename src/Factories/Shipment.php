@@ -87,7 +87,7 @@ class Shipment
     /**
      * @param object $response
      */
-    public function setResponse(object $response): void
+    public function setResponse($response): void
     {
         $this->response = $response;
     }
