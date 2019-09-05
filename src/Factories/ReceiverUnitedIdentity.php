@@ -95,9 +95,9 @@ class ReceiverUnitedIdentity
         Identification $receiverIdentity,
         string $internationalPostcode,
         string $countryISO,
+        string $receiverEmail,
         string $postcode = null,
         string $receiverPhone = null,
-        string $receiverEmail = null,
         string $isInternationalPostBox = null,
         string $spanishPostBoxNumber = null,
         Sms $sms = null

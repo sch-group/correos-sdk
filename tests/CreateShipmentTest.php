@@ -50,8 +50,6 @@ class CreateShipmentTest extends InitTest
             $receiverIdentity,
             "423",
             "RU",
-             null,
-            "89274269594",
             "ainur_ahmetgalie@mail.ru"
         );
 
@@ -115,9 +113,7 @@ class CreateShipmentTest extends InitTest
             $receiverAddress,
             $receiverIdentity,
             "42300", // must be less than < 6
-            "423000",
             "RU",
-            "89274269594",
             "ainur_ahmetgalie@mail.ru"
         );
 

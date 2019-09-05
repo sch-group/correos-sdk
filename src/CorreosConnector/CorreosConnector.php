@@ -53,7 +53,7 @@ class CorreosConnector
      * @return Shipment
      * @throws CorreosException
      */
-    public function createShipment(Shipment $invoice): Shipment
+    public function createShipment(Shipment $shipment): Shipment
     {
 
         try {
@@ -68,15 +68,13 @@ class CorreosConnector
                 CorreosConfig::TOTAL_BULTOS,
                 self::XML_TYPE_REQUEST,
                 $this->senderUnitedIdentity->buildSenderIdentity(),
-                $invoice->getReceiverUnitedIdentity()->buildReceiverIdentity(),
-                $invoice->getSendingContent()->buildSendingContent(),
+                $shipment->getReceiverUnitedIdentity()->buildReceiverIdentity(),
+                $shipment->getSendingContent()->buildSendingContent(),
                 null,
                 null,
                 null
             );
             $response = $createOptions->PreRegistro($registerData); // SOAP REQUEST
-
-            $invoice->setResponse($response);
 
         } catch (InvalidArgumentException $exception) {
             throw new CorreosException($exception->getMessage() . " _ " . $exception->getTraceAsString(), $exception->getCode(), $exception->getPrevious());
@@ -84,11 +82,13 @@ class CorreosConnector
 
         $this->checkMethodException($response);
 
-        $invoice->setTrackNumber($response->CodExpedicion);
+        $shipment->setResponse($response);
 
-        $invoice->setDateRequest(new \DateTime($response->FechaRespuesta));
+        $shipment->setTrackNumber($response->CodExpedicion);
 
-        return $invoice;
+        $shipment->setDateRequest(new \DateTime($response->FechaRespuesta));
+
+        return $shipment;
     }
 
     /**

@@ -79,9 +79,9 @@ class InitTest extends TestCase
             $receiverIdentity,
             "48059", // must be less than < 6
             "US",
+            "ainur_ahmetgalie@mail.ru",
             null,
-            "89274269594",
-            "ainur_ahmetgalie@mail.ru"
+            null
         );
 
         $product = new ProductDescription(
