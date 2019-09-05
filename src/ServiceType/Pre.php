@@ -37,13 +37,13 @@ class Pre extends SoapClient
     {
         try {
             $this->setResult($this->getSoapClient()->PreRegistro($preRegistroEnvioRequest));
-            file_put_contents("request.xml", $this->getLastRequest());
+//            file_put_contents("request.xml", $this->getLastRequest());
 
             return $this->getResult();
 
         } catch (\SoapFault $soapFault) {
 
-            file_put_contents("request.xml", $this->getLastRequest());
+//            file_put_contents("request.xml", $this->getLastRequest());
 
             $this->saveLastError(__METHOD__, $soapFault);
             return false;

@@ -46,6 +46,10 @@ class SendingContent
 
     const ALLOW_NO_MODIFICATION = '0';
 
+    const RETURN_DELIVERY_INSTRUCTION = 'D';
+
+    const DESTROY_DELIVERY_INSTRUCTION = 'A';
+
     /**
      * CodProducto
      * @var string

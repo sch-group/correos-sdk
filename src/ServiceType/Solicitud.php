@@ -48,7 +48,7 @@ class Solicitud extends SoapClient
     {
         try {
             $this->setResult($this->getSoapClient()->SolicitudEtiquetaExpOp($solicitudEtiquetaExpRequest));
-            file_put_contents("label.xml", $this->getLastRequest()); die;
+            //            file_put_contents("label.xml", $this->getLastRequest()); die;
 
             return $this->getResult();
         } catch (\SoapFault $soapFault) {
