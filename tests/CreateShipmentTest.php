@@ -7,7 +7,6 @@ namespace CorreosSdk\Tests;
 use CorreosSdk\Exceptions\CorreosException;
 use CorreosSdk\Factories\Address;
 use CorreosSdk\Factories\Identification;
-use CorreosSdk\Factories\Invoice;
 use CorreosSdk\Factories\PackageSize;
 use CorreosSdk\Factories\ProductDescription;
 use CorreosSdk\Factories\ProductList;
@@ -49,9 +48,9 @@ class CreateShipmentTest extends InitTest
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,
             $receiverIdentity,
-            "423004", // must be less than < 6
-            "423000",
+            "423",
             "RU",
+             null,
             "89274269594",
             "ainur_ahmetgalie@mail.ru"
         );

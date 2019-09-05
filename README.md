@@ -31,61 +31,65 @@ Initialization
 ```
 Create Shipment:
 ```
-        $receiverAddress = new Address(
-                  "TEST LAKEPORT",
-                  "TEST STREET NAME",
-                  "TEST NAME",
-                  "20"
-              );
-              $receiverIdentity = new Identification(
-                  "TEST TEST",
-              );
-              $receiverUnitedIdentity = new ReceiverUnitedIdentity(
-                  $receiverAddress,
-                  $receiverIdentity,
-                  "48059", // must be less than < 6
-                  "48059",
-                  "US",
-                  "89274269592",
-                  "ainur_ahmetgalie@mail.ru"
-              );
-      
-              $product = new ProductDescription(
-                  '1',
-                  '189',
-                  '200',
-                  '96000'
-              );
-              $productList = new ProductList();
-              $productList->addProduct($product);
-      
-              $sendingInsides = new SendingInsides(
-                  SendingInsides::GOODS_CONTENT_TYPE, // GOODS,
-                  SendingInsides::YES_CHOICE, // Y
-                   SendingInsides::YES_CHOICE,
-                  $productList,
-                  SendingInsides::NO_CHOICE
-              );
-              $packageSize = new PackageSize(
-                  15,
-                  15,
-                  15,
-                  500
-              );
-      
-              $sendingContent = new SendingContent(
-                  SendingContent::PAQ_LIGHT_INTERNATIONAL_TARIFF, // PAQ LIGHT INTERNATIONAL(I)
-                  SendingContent::POSTAGE_PAID_PAYMENT_TYPE,
-                  SendingContent::STANDARD_DELIVERY_MODE,
-                  $packageSize,
-                  $sendingInsides
-              );
-      
-              $sendingContent->setCustomerShipmentCode("test order: 123456");
-      
-              $shipment = new Shipment($receiverUnitedIdentity, $sendingContent);
-      
-              $createdInvoice = $this->client->createShipment($shipment);
+     $receiverAddress = new Address(
+            "TEST LAKEPORT",
+            "TEST STREET NAME",
+            "TEST NAME",
+            "20"
+        );
+        $receiverIdentity = new Identification(
+            "TEST TEST",
+            null,
+            null,
+            null,
+            null
+        );
+        $receiverUnitedIdentity = new ReceiverUnitedIdentity(
+            $receiverAddress,
+            $receiverIdentity,
+            "48059", //
+            "US",
+            null,
+            "89274269594",
+            "ainur_ahmetgalie@mail.ru"
+        );
+
+        $product = new ProductDescription(
+            '1',
+            '189',
+            '200',
+            '96000'
+        );
+        $productList = new ProductList();
+        $productList->addProduct($product);
+
+        $sendingInsides = new SendingInsides(
+            SendingInsides::GOODS_CONTENT_TYPE, // GOODS,
+            SendingInsides::YES_CHOICE, // Y
+             SendingInsides::YES_CHOICE,
+            $productList,
+            SendingInsides::NO_CHOICE
+        );
+        $packageSize = new PackageSize(
+            15,
+            15,
+            15,
+            500
+        );
+
+        $sendingContent = new SendingContent(
+            SendingContent::PAQ_LIGHT_INTERNATIONAL_TARIFF, // PAQ LIGHT INTERNATIONAL(I)
+            SendingContent::POSTAGE_PAID_PAYMENT_TYPE,
+            SendingContent::STANDARD_DELIVERY_MODE,
+            $packageSize,
+            $sendingInsides
+        );
+
+        $sendingContent->setCustomerShipmentCode("test order: 123456");
+
+        $shipment = new Shipment($receiverUnitedIdentity, $sendingContent);
+
+        $createdInvoice = $this->client->createShipment($shipment);     
 ```
 Print labels:
 
@@ -121,12 +125,8 @@ Update shipment :
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,
             $receiverIdentity,
-            "42300", // must be less than < 6
-            "480590", // Zip
-            "RU", // ISO CODE
-            "+79274269591",
-            "ainurio@mail.ru"
-
+            "480590", // must be less than < 6
+            "US", // Zip
         );
 
         $product = new ProductDescription(

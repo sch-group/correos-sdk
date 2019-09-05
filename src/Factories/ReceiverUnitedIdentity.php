@@ -93,9 +93,9 @@ class ReceiverUnitedIdentity
     public function __construct(
         Address $receiverAddress,
         Identification $receiverIdentity,
-        string $postcode,
         string $internationalPostcode,
         string $countryISO,
+        string $postcode = null,
         string $receiverPhone = null,
         string $receiverEmail = null,
         string $isInternationalPostBox = null,

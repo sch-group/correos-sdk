@@ -28,18 +28,14 @@ class UpdateShipmentTest extends InitTest
             "20"
         );
         $receiverIdentity = new Identification(
-            "TEST TEST",
-            null,
-            null,
-            null,
-            null
+            "TEST TEST"
         );
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,
             $receiverIdentity,
             "42300", // must be less than < 6
-            "480590",
-            "RU",
+            "US",
+            null,
             "89274269592",
             "ainur_ahmetgalie@mail.ru"
 
@@ -55,8 +51,8 @@ class UpdateShipmentTest extends InitTest
         $productList->addProduct($product);
 
         $sendingInsides = new SendingInsides(
-            "2", // GOODS,
-            "S", // Y
+            SendingInsides::GOODS_CONTENT_TYPE, // GOODS,
+            SendingInsides::YES_CHOICE, // Y
             $totalPrice > 50000 ? SendingInsides::YES_CHOICE : null,
             $productList,
             $totalPrice > 50000 ? SendingInsides::NO_CHOICE : null

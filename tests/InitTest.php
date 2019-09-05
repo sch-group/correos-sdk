@@ -78,8 +78,8 @@ class InitTest extends TestCase
             $receiverAddress,
             $receiverIdentity,
             "48059", // must be less than < 6
-            "48059",
             "US",
+            null,
             "89274269594",
             "ainur_ahmetgalie@mail.ru"
         );
