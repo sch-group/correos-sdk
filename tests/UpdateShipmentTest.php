@@ -35,8 +35,6 @@ class UpdateShipmentTest extends InitTest
             $receiverIdentity,
             "42300", // must be less than < 6
             "US",
-            null,
-            "89274269592",
             "ainur_ahmetgalie@mail.ru"
 
         );
