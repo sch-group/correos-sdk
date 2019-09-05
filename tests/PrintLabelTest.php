@@ -24,7 +24,10 @@ class PrintLabelTest extends InitTest
 
         $dateTime = $invoice->getDateRequest();
 
-        $labelPdfByteCode = $this->client->printLabel($trackNumber, $dateTime);
+        $dateTime = new \DateTime('tomorrow');
+
+        $labelPdfByteCode = $this->client->printLabel($trackNumber, null);
+
 
         $this->assertTrue(strlen($labelPdfByteCode) > 3);
 
@@ -40,6 +43,8 @@ class PrintLabelTest extends InitTest
         $trackNumber = $shipment->getTrackNumber();
 
         $dateTime = $shipment->getDateRequest();
+
+        $dateTime = new \DateTime('tomorrow');
 
         $labelPdfByteCode = $this->client->printLabel($trackNumber, $dateTime);
 

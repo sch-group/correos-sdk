@@ -129,9 +129,9 @@ class CreateShipmentTest extends InitTest
         $sendingInsides = new SendingInsides(
             SendingInsides::GOODS_CONTENT_TYPE, // GOODS,
             SendingInsides::YES_CHOICE, // Y
-            $totalPrice > 50000 ? SendingInsides::YES_CHOICE : null,
+            SendingInsides::YES_CHOICE,
             $productList,
-            $totalPrice > 50000 ? SendingInsides::NO_CHOICE : null
+            SendingInsides::NO_CHOICE
         );
 
         $packageSize = new PackageSize(

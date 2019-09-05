@@ -24,7 +24,8 @@ class CorreosConnector
     const CANCEL_STATUS_CODES = [
         '67' => 'The item has not been pre-registered',
         '66' => 'The item has already been cancelled.',
-        '65' => 'The item has already been admitted.'
+        '65' => 'The item has already been admitted.',
+        '197' => 'The client and the contract do not belong to the user requesting the operation.'
     ];
 
     /**
@@ -97,12 +98,12 @@ class CorreosConnector
      * @return string
      * @throws CorreosException
      */
-    public function printLabel(string $trackNumber, \DateTime $shipDateRequest): string
+    public function printLabel(string $trackNumber, \DateTime $shipDateRequest = null): string
     {
         $documentationService = new Solicitud($this->correosConfig->getOptions());
 
         $labelData = new SolicitudEtiqueta(
-            $shipDateRequest->format('d-m-y H:i:s'),
+            !empty($shipDateRequest) ? $shipDateRequest->format('d-m-y H:i:s') : null,
             $this->correosConfig->getClientCode(),
             $this->correosConfig->getClientContractNumber(),
             $this->correosConfig->getClientNumber(),
