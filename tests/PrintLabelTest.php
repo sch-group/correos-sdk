@@ -3,14 +3,7 @@
 
 namespace CorreosSdk\Tests;
 
-
-use CorreosSdk\CorreosConnector\CorreosConfig;
-use CorreosSdk\CorreosConnector\CorreosConnector;
 use CorreosSdk\Exceptions\CorreosException;
-use CorreosSdk\Factories\Address;
-use CorreosSdk\Factories\Identification;
-use CorreosSdk\Factories\SenderUnitedIdentity;
-use Matomo\Ini\IniReader;
 
 class PrintLabelTest extends InitTest
 {
@@ -28,7 +21,6 @@ class PrintLabelTest extends InitTest
 
         $labelPdfByteCode = $this->client->printLabel($trackNumber, null);
 
-
         $this->assertTrue(strlen($labelPdfByteCode) > 3);
 
     }
@@ -42,8 +34,6 @@ class PrintLabelTest extends InitTest
 
         $trackNumber = $shipment->getTrackNumber();
 
-        $dateTime = $shipment->getDateRequest();
-
         $dateTime = new \DateTime('tomorrow');
 
         $labelPdfByteCode = $this->client->printLabel($trackNumber, $dateTime);
@@ -54,4 +44,37 @@ class PrintLabelTest extends InitTest
 
     }
 
+    public function testPrintCustomDocument()
+    {
+
+        $typeDocument = "DDP"; // DCAF
+        $countryIso = "RU";
+        $numberOfShipments = "2";
+        $companyName = "test";
+
+        $documentCode = $this->client->printCustomsDocument($typeDocument, $countryIso, $numberOfShipments, $companyName);
+
+        $this->assertTrue(strlen($documentCode) > 3);
+    }
+
+    public function testCustomDocumentCN23CP71()
+    {
+        $invoice = $this->createShipment();
+
+        $trackNumber = $invoice->getClippedTrackNumber();
+
+        $documentCode = $this->client->printCustomDocumentCN23CP71($trackNumber);
+
+        $this->assertTrue(strlen($documentCode) > 3);
+
+    }
+
+    public function testExpeditionPrint()
+    {
+        $invoice = $this->createShipment();
+
+        $trackNumber = $invoice->getTrackNumber();
+
+//        $labelPdfByteCode = $this->client->printExpeditionLabel($trackNumber, $invoice->getDateRequest());
+    }
 }

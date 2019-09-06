@@ -107,7 +107,7 @@ class Shipment
     {
         $preparedDateTime = $this->setZerosToSeconds($dateRequest);
 
-        $this->dateRequest = $preparedDateTime;
+        $this->dateRequest = $dateRequest;
     }
 
     /**
@@ -127,7 +127,7 @@ class Shipment
      * For printing labels need cut last character
      * @return string
      */
-    public function getClippedTrackNumber(): string
+    public function getClippedTrackNumber(): ?string
     {
         return substr($this->trackNumber, 0, -1);
     }

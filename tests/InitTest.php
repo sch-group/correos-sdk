@@ -37,21 +37,20 @@ class InitTest extends TestCase
             $config['sender_city_name'],
             $config['sender_street_name'],
             $config['sender_province_name'],
-            $config['sender_street_number']
+            $config['sender_street_number'],
+            null,
+            "C",
+            null,
+            null,
+            $config['sender_street_floor']
         );
         $senderIdentification = new Identification(
-            $config['sender_name'],
-            $config['sender_first_name'],
-            $config['sender_second_name'],
-            $config['sender_company_name'],
             $config['sender_name']
         );
         $senderUnitedIdentity = new SenderUnitedIdentity(
             $senderAddress,
             $senderIdentification,
-            $config['sender_postcode'],
-            $config['sender_phone'],
-            $config['sender_email']
+            $config['sender_post_code']
         );
 
         $this->client = new CorreosConnector($correosConfig, $senderUnitedIdentity);
@@ -68,11 +67,7 @@ class InitTest extends TestCase
             "20"
         );
         $receiverIdentity = new Identification(
-            "TEST TEST",
-            null,
-            null,
-            null,
-            null
+            "TEST TEST"
         );
         $receiverUnitedIdentity = new ReceiverUnitedIdentity(
             $receiverAddress,

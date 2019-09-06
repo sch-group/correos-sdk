@@ -2,6 +2,10 @@
 
 namespace CorreosSdk\CorreosConnector;
 
+use CorreosSdk\ServiceType\Documentacion;
+use CorreosSdk\StructType\SolicitudDocumentacionAduanera;
+use CorreosSdk\StructType\SolicitudDocumentacionAduaneraCN23CP71;
+use CorreosSdk\StructType\SolicitudEtiquetaExp;
 use InvalidArgumentException;
 use CorreosSdk\ServiceType\Anular;
 use CorreosSdk\ServiceType\Modificar;
@@ -114,11 +118,83 @@ class CorreosConnector
 
         $response = $documentationService->SolicitudEtiquetaOp($labelData);
 
-        if($response->getResultado() == 1) {
+        if ($response->getResultado() == 1) {
             throw new CorreosException("Shipment with track number " . $trackNumber . " not found");
         }
 
         return !empty($response->Bulto) ? $response->Bulto->Etiqueta->Etiqueta_pdf->Fichero : "";
+    }
+
+    /**
+     * @param string $trackNumber
+     * @param \DateTime $shipDateRequest
+     * @return string
+     * @throws CorreosException
+     */
+    public function printExpeditionLabel(string $trackNumber, \DateTime $shipDateRequest = null): string
+    {
+        $documentationService = new Solicitud($this->correosConfig->getOptions());
+
+        $labelData = new SolicitudEtiquetaExp(
+            !empty($shipDateRequest) ? $shipDateRequest->format('d-m-y H:i:s') : null,
+            $this->correosConfig->getClientCode(),
+            $this->correosConfig->getClientContractNumber(),
+            $this->correosConfig->getClientNumber(),
+            $trackNumber,
+            $this->correosConfig->getCare(),
+            self::PDF_TYPE_REQUEST
+        );
+        $response = $documentationService->SolicitudEtiquetaExpOp($labelData);
+
+        return !empty($response->Bulto) ? $response->Bulto->Etiqueta->Etiqueta_pdf->Fichero : "";
+    }
+
+
+    /**
+     *
+     * @param string $type
+     * @param string $countryIso
+     * @param string $numberOfShippings
+     * @param string $companyName
+     * @param string $province
+     * @return string|null
+     */
+    public function printCustomsDocument(string $type, string $countryIso, string $numberOfShippings, string $companyName, string $province = ''): ?string
+    {
+        $documentationService = new Documentacion($this->correosConfig->getOptions());
+
+        $documentData = new SolicitudDocumentacionAduanera(
+            $type,
+            $this->correosConfig->getClientContractNumber(),
+            $this->correosConfig->getClientNumber(),
+            $this->correosConfig->getClientCode(),
+            $province,
+            $countryIso,
+            $companyName,
+            $numberOfShippings
+        );
+
+        $response = $documentationService->DocumentacionAduaneraOp($documentData);
+
+        return !empty($response->Fichero) ? $response->Fichero : "";
+
+    }
+
+    /**
+     * @param $trackNumber
+     * @return string
+     */
+    public function printCustomDocumentCN23CP71(string $trackNumber)
+    {
+        $documentationService = new Documentacion($this->correosConfig->getOptions());
+
+        $documentData = new SolicitudDocumentacionAduaneraCN23CP71(
+            $trackNumber
+        );
+
+        $response = $documentationService->DocumentacionAduaneraCN23CP71Op($documentData);
+
+        return !empty($response->Fichero) ? $response->Fichero : "";
     }
 
     /**
@@ -144,15 +220,16 @@ class CorreosConnector
 
     /**
      * @param Shipment $invoice
+     * @param string $trackNumber
      * @return Shipment
      * @throws CorreosException
      */
-    public function updateShipment(Shipment $invoice): Shipment
+    public function updateShipment(Shipment $invoice, string $trackNumber): Shipment
     {
         try {
             $updateService = new Modificar($this->correosConfig->getOptions());
             $updateData = new PeticionModificar(
-                $invoice->getClippedTrackNumber(),
+                $trackNumber,
                 $invoice->getDateRequest()->format('d-m-y H:i:s'),
                 $this->correosConfig->getClientCode(),
                 $this->correosConfig->getClientContractNumber(),
@@ -164,7 +241,6 @@ class CorreosConnector
                 $invoice->getReceiverUnitedIdentity()->buildUpdateReceiverIdentity(),
                 $invoice->getSendingContent()->buildUpdateSendingContent()
             );
-
             $response = $updateService->ModificarOp($updateData);
 
             $invoice->setResponse($response);
