@@ -3,21 +3,22 @@
 namespace CorreosSdk\CorreosConnector;
 
 use CorreosSdk\ServiceType\Documentacion;
-use CorreosSdk\StructType\SolicitudDocumentacionAduanera;
-use CorreosSdk\StructType\SolicitudDocumentacionAduaneraCN23CP71;
-use CorreosSdk\StructType\SolicitudEtiquetaExp;
+
 use InvalidArgumentException;
-use CorreosSdk\ServiceType\Anular;
-use CorreosSdk\ServiceType\Modificar;
-use CorreosSdk\StructType\PeticionAnular;
-use CorreosSdk\StructType\PeticionModificar;
 use CorreosSdk\ServiceType\Pre;
+use CorreosSdk\ServiceType\Anular;
 use CorreosSdk\Factories\Shipment;
+use CorreosSdk\ServiceType\Modificar;
 use CorreosSdk\ServiceType\Solicitud;
+use CorreosSdk\StructType\PeticionAnular;
 use CorreosSdk\StructType\PreregistroEnvio;
 use CorreosSdk\StructType\SolicitudEtiqueta;
 use CorreosSdk\Exceptions\CorreosException;
+use CorreosSdk\StructType\PeticionModificar;
+use CorreosSdk\StructType\SolicitudEtiquetaExp;
 use CorreosSdk\Factories\SenderUnitedIdentity;
+use CorreosSdk\StructType\SolicitudDocumentacionAduanera;
+use CorreosSdk\StructType\SolicitudDocumentacionAduaneraCN23CP71;
 
 class CorreosConnector
 {
@@ -47,9 +48,17 @@ class CorreosConnector
      * @param CorreosConfig $correosConfig
      * @param SenderUnitedIdentity $senderUnitedIdentity
      */
-    public function __construct(CorreosConfig $correosConfig, SenderUnitedIdentity $senderUnitedIdentity)
+    public function __construct(CorreosConfig $correosConfig, SenderUnitedIdentity $senderUnitedIdentity = null)
     {
         $this->correosConfig = $correosConfig;
+        $this->senderUnitedIdentity = $senderUnitedIdentity;
+    }
+
+    /**
+     * @param SenderUnitedIdentity $senderUnitedIdentity
+     */
+    public function setSenderUnitedIdentity(SenderUnitedIdentity $senderUnitedIdentity): void
+    {
         $this->senderUnitedIdentity = $senderUnitedIdentity;
     }
 
