@@ -37,11 +37,22 @@ class Shipment
      * @var object
      */
     private $response;
+    /**
+     * @var SenderUnitedIdentity|null
+     */
+    private $senderUnitedIdentity;
 
-    public function __construct(ReceiverUnitedIdentity $receiverUnitedIdentity, SendingContent $sendingContent)
+    /**
+     * Shipment constructor.
+     * @param ReceiverUnitedIdentity $receiverUnitedIdentity
+     * @param SendingContent $sendingContent
+     * @param SenderUnitedIdentity|null $senderUnitedIdentity
+     */
+    public function __construct(ReceiverUnitedIdentity $receiverUnitedIdentity, SendingContent $sendingContent, SenderUnitedIdentity $senderUnitedIdentity = null)
     {
         $this->receiverUnitedIdentity = $receiverUnitedIdentity;
         $this->sendingContent = $sendingContent;
+        $this->senderUnitedIdentity = $senderUnitedIdentity;
     }
 
     /**
@@ -130,5 +141,21 @@ class Shipment
     public function getClippedTrackNumber(): ?string
     {
         return substr($this->trackNumber, 0, -1);
+    }
+
+    /**
+     * @return SenderUnitedIdentity|null
+     */
+    public function getSenderUnitedIdentity(): ?SenderUnitedIdentity
+    {
+        return $this->senderUnitedIdentity;
+    }
+
+    /**
+     * @param SenderUnitedIdentity|null $senderUnitedIdentity
+     */
+    public function setSenderUnitedIdentity(?SenderUnitedIdentity $senderUnitedIdentity): void
+    {
+        $this->senderUnitedIdentity = $senderUnitedIdentity;
     }
 }

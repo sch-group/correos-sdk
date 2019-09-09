@@ -63,7 +63,7 @@ class CorreosConnector
     }
 
     /**
-     * @param Shipment $invoice
+     * @param Shipment $shipment
      * @return Shipment
      * @throws CorreosException
      */
@@ -81,7 +81,7 @@ class CorreosConnector
                 $this->correosConfig->getCare(),
                 CorreosConfig::TOTAL_BULTOS,
                 self::XML_TYPE_REQUEST,
-                $this->senderUnitedIdentity->buildSenderIdentity(),
+                !empty($this->senderUnitedIdentity) ? $this->senderUnitedIdentity->buildSenderIdentity() : $shipment->getSenderUnitedIdentity()->buildSenderIdentity() ,
                 $shipment->getReceiverUnitedIdentity()->buildReceiverIdentity(),
                 $shipment->getSendingContent()->buildSendingContent(),
                 null,
@@ -228,37 +228,37 @@ class CorreosConnector
     }
 
     /**
-     * @param Shipment $invoice
+     * @param Shipment $shipment
      * @param string $trackNumber
      * @return Shipment
      * @throws CorreosException
      */
-    public function updateShipment(Shipment $invoice, string $trackNumber): Shipment
+    public function updateShipment(Shipment $shipment, string $trackNumber): Shipment
     {
         try {
             $updateService = new Modificar($this->correosConfig->getOptions());
             $updateData = new PeticionModificar(
                 $trackNumber,
-                $invoice->getDateRequest()->format('d-m-y H:i:s'),
+                $shipment->getDateRequest()->format('d-m-y H:i:s'),
                 $this->correosConfig->getClientCode(),
                 $this->correosConfig->getClientContractNumber(),
                 $this->correosConfig->getClientNumber(),
                 $this->correosConfig->getCare(),
                 CorreosConfig::TOTAL_BULTOS,
                 self::XML_TYPE_REQUEST,
-                $this->senderUnitedIdentity->buildUpdateSenderIdentity(),
-                $invoice->getReceiverUnitedIdentity()->buildUpdateReceiverIdentity(),
-                $invoice->getSendingContent()->buildUpdateSendingContent()
+                !empty($this->senderUnitedIdentity) ? $this->senderUnitedIdentity->buildUpdateSenderIdentity() : $shipment->getSenderUnitedIdentity()->buildUpdateSenderIdentity() ,
+                $shipment->getReceiverUnitedIdentity()->buildUpdateReceiverIdentity(),
+                $shipment->getSendingContent()->buildUpdateSendingContent()
             );
             $response = $updateService->ModificarOp($updateData);
 
-            $invoice->setResponse($response);
+            $shipment->setResponse($response);
 
         } catch (InvalidArgumentException $exception) {
-            throw new CorreosException($exception->getMessage() . " _ " . $exception->getTraceAsString(), $exception->getCode(), $exception->getPrevious());
+            throw new CorreosException($exception->getMessage() . " _ " . $exception->getTraceAsString(), $exception->getCode());
         }
 
-        return $invoice;
+        return $shipment;
     }
 
     /**
