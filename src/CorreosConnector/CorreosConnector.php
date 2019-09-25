@@ -271,4 +271,20 @@ class CorreosConnector
             throw new CorreosException($response->BultoError->DescError);
         }
     }
+
+    /**
+     * @return CorreosConfig
+     */
+    public function getCorreosConfig(): CorreosConfig
+    {
+        return $this->correosConfig;
+    }
+
+    /**
+     * @return SenderUnitedIdentity
+     */
+    public function getSenderUnitedIdentity(): SenderUnitedIdentity
+    {
+        return $this->senderUnitedIdentity;
+    }
 }
